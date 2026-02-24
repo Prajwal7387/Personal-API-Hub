@@ -1,0 +1,85 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}API Builder{% endblock %}
+
+{% block content %}
+<header>
+    <div class="badge">Projection Engine</div>
+    <h1>API Builder</h1>
+    <p class="subtitle">Create custom logical projections of your normalized data into specialized endpoints.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+    <!-- Builder Form -->
+    <section>
+        <div class="card">
+            <h3 style="margin-bottom: 2rem;">Create New Endpoint</h3>
+            <form id="create-api-form" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div>
+                    <label class="label-muted">Endpoint Name</label>
+                    <input type="text" name="name" placeholder="my-custom-endpoint" class="input-dark">
+                </div>
+                <div>
+                    <label class="label-muted">Configuration (JSON)</label>
+                    <textarea name="config" rows="6" placeholder='{ "source": "github", "fields": ["name", "stars"] }'
+                        class="input-dark" style="resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                    Generate Projection
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Existing APIs List -->
+    <section>
+        <div class="card" style="height: 100%;">
+            <h3 style="margin-bottom: 2rem;">Active Projections</h3>
+            <div id="api-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                {% for api in custom_apis %}
+                <div class="flex-between icon-box" style="padding: 1rem;">
+                    <div>
+                        <p style="font-weight: 600; font-size: 0.95rem;">/api/custom/{{ api.endpoint_name }}/</p>
+                        <p class="text-muted" style="font-size: 0.75rem;">Last accessed: {{ api.updated_at|timesince }}
+                            ago</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--zinc-700);"></i>
+                </div>
+                {% empty %}
+                <p class="text-muted">No custom endpoints created yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('create-api-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const data = {
+            endpoint_name: formData.get('name'),
+            config: JSON.parse(formData.get('config'))
+        };
+
+        try {
+            const response = await fetch('/api/custom/create/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            if (result.status === "success") {
+                alert('Success! Custom API is now live.');
+                location.reload();
+            } else {
+                alert('Error: ' + JSON.stringify(result.message));
+            }
+        } catch (err) {
+            alert('Failed to create API. Check your JSON format.');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Integrations{% endblock %}
+
+{% block content %}
+<header>
+    <div class="badge">Connection Manager</div>
+    <h1>Integrations</h1>
+    <p class="subtitle">Connect and synchronize your favorite platforms with the API Hub.</p>
+</header>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 2rem;">
+    <!-- GitHub Integration -->
+    <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="flex-between">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-brands fa-github" style="font-size: 2rem; color: var(--zinc-50);"></i>
+                <div>
+                    <h3 style="font-size: 1.25rem;">GitHub</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">Repo analysis & language stats</p>
+                </div>
+            </div>
+            <span class="{% if 'github' in connected_providers %}status-active{% else %}status-inactive{% endif %}">
+                {% if 'github' in connected_providers %}CONNECTED{% else %}DISCONNECTED{% endif %}
+            </span>
+        </div>
+
+        <div class="icon-box">
+            <code class="text-mono"
+                style="font-size: 0.8rem; color: var(--primary);">/api/integrations/github/sync/</code>
+        </div>
+
+        {% if 'github' in connected_providers %}
+        <button class="sync-btn btn-sync" data-source="github" style="margin-top: auto;">
+            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+        </button>
+        {% else %}
+        <button class="sync-btn btn-sync" data-source="github" style="margin-top: auto;" disabled>
+            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- Spotify Integration -->
+    <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="flex-between">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <i class="fa-brands fa-spotify" style="font-size: 2rem; color: #1DB954;"></i>
+                <div>
+                    <h3 style="font-size: 1.25rem;">Spotify</h3>
+                    <p class="text-muted" style="font-size: 0.85rem;">Audio footprint & playlists</p>
+                </div>
+            </div>
+            <span class="{% if 'spotify' in connected_providers %}status-active{% else %}status-inactive{% endif %}">
+                {% if 'spotify' in connected_providers %}CONNECTED{% else %}DISCONNECTED{% endif %}
+            </span>
+        </div>
+
+        <div class="icon-box">
+            <code class="text-mono"
+                style="font-size: 0.8rem; color: var(--primary);">/api/integrations/spotify/sync/</code>
+        </div>
+
+        {% if 'spotify' in connected_providers %}
+        <button class="sync-btn btn-sync" data-source="spotify" style="margin-top: auto;">
+            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+        </button>
+        {% else %}
+        <button class="sync-btn btn-sync" data-source="spotify" style="margin-top: auto;" disabled>
+            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+        </button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('.sync-btn').forEach(btn => {
+        btn.addEventListener('click', async function () {
+            const source = this.dataset.source;
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Syncing...';
+            this.disabled = true;
+
+            try {
+                const response = await fetch(`/api/integrations/${source}/sync/`, { method: 'POST' });
+                const result = await response.json();
+                if (result.status === "success") {
+                    this.innerHTML = '<i class="fa-solid fa-check"></i> Success';
+                } else {
+                    this.innerHTML = '<i class="fa-solid fa-xmark"></i> Failed';
+                }
+            } catch (err) {
+                this.innerHTML = '<i class="fa-solid fa-xmark"></i> Error';
+            }
+
+            setTimeout(() => {
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }, 3000);
+        });
+    });
+</script>
+{% endblock %}

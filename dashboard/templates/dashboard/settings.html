@@ -1,0 +1,67 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<header>
+    <div class="badge">Control Center</div>
+    <h1>Settings</h1>
+    <p class="subtitle">Manage your account preferences, security, and developer credentials.</p>
+</header>
+
+<div style="max-width: 800px; display: flex; flex-direction: column; gap: 2rem;">
+    <!-- Profile Section -->
+    <div class="card">
+        <h3 style="margin-bottom: 2rem;">User Profile</h3>
+        <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+            <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem;">
+                {{ user.username|first|upper }}
+            </div>
+            <div>
+                <h4 style="font-size: 1.25rem;">{{ user.username }}</h4>
+                <p class="text-muted">{{ user.email|default:"Developer Account" }}</p>
+            </div>
+        </div>
+        <button class="btn-primary" style="background: transparent; border: 1px solid var(--border); width: auto;">
+            Edit Profile
+        </button>
+    </div>
+
+    <!-- Security & Sessions -->
+    <div class="card">
+        <h3 style="margin-bottom: 2rem;">Security</h3>
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="flex-between">
+                <div>
+                    <p style="font-weight: 600;">Active Session</p>
+                    <p class="text-muted" style="font-size: 0.85rem;">Current IP: 127.0.0.1</p>
+                </div>
+                <a href="/api/auth/logout/"
+                    style="color: #ef4444; font-weight: 600; text-decoration: none; font-size: 0.9rem;">Terminate
+                    all</a>
+            </div>
+
+            <div class="flex-between">
+                <div>
+                    <p style="font-weight: 600;">API Access Tokens</p>
+                    <p class="text-muted" style="font-size: 0.85rem;">Manage persistent keys for CLI access</p>
+                </div>
+                <button
+                    style="color: var(--primary); background: transparent; border: none; font-weight: 600; cursor: pointer;">Generate
+                    Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="card" style="border-color: rgba(239, 68, 68, 0.2);">
+        <h3 style="margin-bottom: 1rem; color: #ef4444;">Danger Zone</h3>
+        <p class="text-muted" style="margin-bottom: 2rem;">Permanently delete your account and all associated data. This
+            action cannot be undone.</p>
+        <button
+            style="padding: 0.85rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); color: #ef4444; border-radius: 10px; font-weight: 600; width: 100%;">
+            Delete My Account
+        </button>
+    </div>
+</div>
+{% endblock %}

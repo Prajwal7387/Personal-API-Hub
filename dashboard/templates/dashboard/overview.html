@@ -1,0 +1,64 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Overview{% endblock %}
+
+{% block content %}
+<header>
+    <div class="badge">System Operational</div>
+    <h1>Welcome back, {{ user.username }}</h1>
+    <p class="subtitle">Here's an overview of your personal API ecosystem and recent activity.</p>
+</header>
+
+<div class="grid-stats">
+    <div class="card">
+        <div class="flex-start" style="margin-bottom: 1.5rem;">
+            <div class="icon-box">
+                <i class="fa-solid fa-link" style="color: var(--primary);"></i>
+            </div>
+            <span class="status-active">ACTIVE</span>
+        </div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">{{ integrations_count|default:"2" }}</h2>
+        <p class="text-muted">Connected Integrations</p>
+    </div>
+
+    <div class="card">
+        <div class="flex-start" style="margin-bottom: 1.5rem;">
+            <div class="icon-box">
+                <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--secondary, #2dd4bf);"></i>
+            </div>
+            <span class="status-type">BUILDER</span>
+        </div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">{{ custom_apis_count|default:"0" }}</h2>
+        <p class="text-muted">Custom API Endpoints</p>
+    </div>
+
+    <div class="card">
+        <div class="flex-start" style="margin-bottom: 1.5rem;">
+            <div class="icon-box">
+                <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i>
+            </div>
+            <span class="status-type">HEALTH</span>
+        </div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.25rem;">99.9%</h2>
+        <p class="text-muted">Platform Reachability</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        {% for activity in recent_activities %}
+        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary); margin-top: 6px;">
+            </div>
+            <div>
+                <p style="font-size: 0.95rem;">{{ activity.description }}</p>
+                <p class="text-muted" style="font-size: 0.75rem;">{{ activity.timestamp|timesince }} ago</p>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No recent activity found. Connect an integration to get started.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

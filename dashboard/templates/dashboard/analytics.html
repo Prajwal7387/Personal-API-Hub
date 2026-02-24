@@ -1,0 +1,77 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% block title %}Analytics{% endblock %}
+
+{% block content %}
+<header>
+    <div class="badge">Data Intelligence</div>
+    <h1>Insight Engine</h1>
+    <p class="subtitle">Deep dive into your digital activity trends and platform distributions processed via pandas.</p>
+</header>
+
+<div style="margin-bottom: 4rem;">
+    <button id="load-analytics-btn" class="btn-primary"
+        style="padding: 1rem 2rem; border-radius: 100px; display: inline-flex; align-items: center; gap: 0.75rem;">
+        <i class="fa-solid fa-bolt"></i> Run Analytics Engine
+    </button>
+</div>
+
+<div id="analytics-display"
+    style="display: none; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2.5rem;">
+    <div class="card">
+        <div class="flex-start" style="margin-bottom: 2rem;">
+            <h3 style="font-size: 1.1rem; color: var(--zinc-300); display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-code-branch" style="color: var(--primary);"></i> Language Distribution
+            </h3>
+        </div>
+        <div
+            style="width: 100%; border-radius: 12px; overflow: hidden; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); aspect-ratio: 16/10;">
+            <img src="" alt="Language Chart" id="img-languages" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="flex-start" style="margin-bottom: 2rem;">
+            <h3 style="font-size: 1.1rem; color: var(--zinc-300); display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-chart-line" style="color: #2dd4bf;"></i> Activity Trends
+            </h3>
+        </div>
+        <div
+            style="width: 100%; border-radius: 12px; overflow: hidden; background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border); aspect-ratio: 16/10;">
+            <img src="" alt="Trends Chart" id="img-trends" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('load-analytics-btn').addEventListener('click', async function () {
+        const btn = this;
+        const display = document.getElementById('analytics-display');
+        const imgLang = document.getElementById('img-languages');
+        const imgTrends = document.getElementById('img-trends');
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+        try {
+            const response = await fetch('/api/dashboard/analytics/');
+            const result = await response.json();
+
+            if (result.status === "success") {
+                imgLang.src = result.data.charts.languages_pie + '?t=' + new Date().getTime();
+                imgTrends.src = result.data.charts.trends_bar + '?t=' + new Date().getTime();
+                display.style.display = 'grid';
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Analytics Ready';
+                display.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert('Error: ' + result.message);
+                btn.innerHTML = 'Retry Analytics';
+            }
+        } catch (err) {
+            btn.innerHTML = 'Error Running Engine';
+            alert('Authentication required or server error.');
+        }
+    });
+</script>
+{% endblock %}

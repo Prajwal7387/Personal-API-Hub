@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal API Hub | Developer Console</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Zinc-based color palette (Vercel/Linear style) */
+            --bg: #030303;
+            --zinc-50: #fafafa;
+            --zinc-100: #f4f4f5;
+            --zinc-200: #e4e4e7;
+            --zinc-300: #d4d4d8;
+            --zinc-400: #a1a1aa;
+            --zinc-500: #71717a;
+            --zinc-600: #52525b;
+            --zinc-700: #3f3f46;
+            --zinc-800: #27272a;
+            --zinc-900: #18181b;
+            --zinc-950: #09090b;
+
+            --primary: #a78bfa;
+            /* Violet 400 */
+            --primary-glow: rgba(167, 139, 250, 0.15);
+            --secondary: #2dd4bf;
+            /* Teal 400 */
+
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(255, 255, 255, 0.12);
+            --card-bg: rgba(24, 24, 27, 0.6);
+            --card-hover: rgba(39, 39, 42, 0.8);
+
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --transition: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--zinc-200);
+            font-family: var(--font-main);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- Premium Background Layering --- */
+        .bg-layers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Layer 1: Subtle Grid */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+            mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+        }
+
+        /* Layer 2: Mesh Gradients */
+        .bg-mesh {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(139, 92, 246, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 0%, rgba(45, 212, 191, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(217, 70, 239, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
+            filter: blur(80px);
+            opacity: 0.8;
+        }
+
+        /* Layer 3: Central Grain/Noise (Subtle depth) */
+        .bg-grain {
+            position: absolute;
+            inset: 0;
+            background-color: transparent;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3%3Cfilter id='noiseFilter'%3%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3%3C/filter%3%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3%3C/svg%3");
+            opacity: 0.02;
+            mix-blend-mode: soft-light;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem;
+            width: 100%;
+            animation: containerReveal 1.2s var(--transition);
+        }
+
+        @keyframes containerReveal {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Hero Section --- */
+        header {
+            text-align: center;
+            margin-bottom: 8rem;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.5rem 1.25rem;
+            background: rgba(24, 24, 27, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--zinc-300);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s var(--transition);
+        }
+
+        .badge:hover {
+            border-color: var(--primary);
+            background: var(--zinc-900);
+        }
+
+        .badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--primary);
+            position: relative;
+        }
+
+        .badge .dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 5.5rem);
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            line-height: 0.95;
+            margin-bottom: 2rem;
+            color: var(--zinc-50);
+            background: linear-gradient(to bottom, #fff 50%, #71717a 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.subtitle {
+            font-size: 1.4rem;
+            color: var(--zinc-500);
+            max-width: 680px;
+            margin: 0 auto;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* --- Grid Layout --- */
+        .endpoints {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2.5rem;
+            perspective: 1000px;
+        }
+
+        /* --- Deep Design Cards --- */
+        .endpoint-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 24px;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            transition: all 0.5s var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+                0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Double border effect on hover */
+        .endpoint-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent, rgba(255, 255, 255, 0.05));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s var(--transition);
+        }
+
+        .endpoint-card:hover {
+            border-color: var(--border-glow);
+            background: var(--card-hover);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 30px 60px -20px rgba(0, 0, 0, 0.8),
+                0 0 20px -5px var(--primary-glow);
+        }
+
+        .endpoint-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .method {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 0.3rem 0.75rem;
+            border-radius: 6px;
+            background: var(--zinc-900);
+            color: var(--zinc-400);
+            border: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .brand-icon {
+            font-size: 2rem;
+            color: var(--zinc-50);
+            transition: all 0.4s var(--transition);
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+        }
+
+        .endpoint-card:hover .brand-icon {
+            transform: scale(1.15) translateY(-2px);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));
+        }
+
+        .card-body h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--zinc-50);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-body p {
+            font-size: 1rem;
+            color: var(--zinc-500);
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* --- Code Block Interface --- */
+        .path-container {
+            margin-top: auto;
+            position: relative;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.2rem;
+        }
+
+        .path {
+            font-family: var(--font-mono);
+            background: var(--zinc-950);
+            padding: 0.85rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--primary);
+            display: block;
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s var(--transition);
+            pointer-events: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .endpoint-card:hover .path {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .spotify-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .spotify-icon {
+            color: #1DB954;
+        }
+
+        /* --- Staggered Animations --- */
+        .endpoint-card {
+            animation: cardReveal 0.8s var(--transition) both;
+        }
+
+        @keyframes cardReveal {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .endpoint-card:nth-child(1) {
+            animation-delay: 0.15s;
+        }
+
+        .endpoint-card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .endpoint-card:nth-child(3) {
+            animation-delay: 0.45s;
+        }
+
+        .endpoint-card:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .endpoint-card:nth-child(5) {
+            animation-delay: 0.75s;
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: auto;
+            padding: 6rem 2rem;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.01));
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 100px;
+            color: #10b981;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .status-pill .ping-container {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-pill .ping-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            border-radius: inherit;
+            animation: statusPing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes statusPing {
+
+            75%,
+            100% {
+                transform: scale(3.5);
+                opacity: 0;
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+            color: var(--zinc-600);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .footer-links span {
+            transition: color 0.3s var(--transition);
+            cursor: default;
+        }
+
+        .footer-links span:hover {
+            color: var(--zinc-400);
+        }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--zinc-800);
+            border: 2px solid var(--bg);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--zinc-700);
+        }
+
+        /* --- Mobile Overrides --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 6rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 3.5rem;
+            }
+
+            .endpoints {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .endpoint-card {
+                padding: 2rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+
+        /* --- Analytics Section --- */
+        .analytics-section {
+            margin-top: 10rem;
+            animation: containerReveal 1.2s var(--transition) 0.5s both;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .graph-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 24px;
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            transition: all 0.5s var(--transition);
+        }
+
+        .graph-card:hover {
+            border-color: var(--border-glow);
+            background: var(--card-hover);
+        }
+
+        .graph-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--zinc-300);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chart-container {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            aspect-ratio: 16/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.8s var(--transition);
+        }
+
+        .graph-card:hover img {
+            transform: scale(1.05);
+        }
+
+        #load-analytics-btn {
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            background: var(--zinc-900);
+            border: 1px solid var(--border);
+            color: var(--zinc-200);
+            border-radius: 100px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        #analytics-display {
+            display: none;
+        }
+
+        .icon-primary {
+            color: var(--primary);
+        }
+
+        .icon-secondary {
+            color: var(--secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-layers">
+        <div class="bg-mesh"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-grain"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <div class="badge">
+                <span class="dot"></span>
+                v1.0.0 Stable Build
+            </div>
+            <h1>The Personal <br>Analytics Hub</h1>
+            <p class="subtitle">An enterprise-ready command center for orchestrating and projecting your fragmented
+                digital life into a single, clean API layer.</p>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                <a href="/api/auth/register/"
+                    style="padding: 0.85rem 2rem; background: var(--primary); color: white; text-decoration: none; border-radius: 100px; font-weight: 600; transition: transform 0.2s;">Get
+                    Started</a>
+                <a href="/api/auth/login/"
+                    style="padding: 0.85rem 2rem; background: transparent; border: 1px solid var(--border); color: var(--zinc-200); text-decoration: none; border-radius: 100px; font-weight: 600;">Sign
+                    In</a>
+            </div>
+        </header>
+
+        <section class="endpoints">
+            <!-- Auth -->
+            <article class="endpoint-card">
+                <div class="card-header">
+                    <span class="method">POST</span>
+                    <i class="fa-solid fa-shield-halved brand-icon"></i>
+                </div>
+                <div class="card-body">
+                    <h3>Authentication</h3>
+                    <p>Production-grade user management with secure credential hashing and multi-environment JWT
+                        support.</p>
+                </div>
+                <div class="path-container">
+                    <code class="path">/api/auth/register/</code>
+                </div>
+            </article>
+
+            <!-- GitHub -->
+            <article class="endpoint-card">
+                <div class="card-header">
+                    <span class="method">POST</span>
+                    <i class="fa-brands fa-github brand-icon"></i>
+                </div>
+                <div class="card-body">
+                    <h3>Code Insight Sync</h3>
+                    <p>Automated repository analysis, language distribution, and star-count normalization for dev
+                        profiles.</p>
+                </div>
+                <div class="path-container">
+                    <code class="path">/api/integrations/github/sync/</code>
+                </div>
+            </article>
+
+            <!-- Spotify -->
+            <article class="endpoint-card">
+                <div class="card-header">
+                    <span class="method">POST</span>
+                    <a href="https://open.spotify.com" target="_blank" rel="noopener" class="spotify-link"
+                        title="Launch Spotify Web Player">
+                        <i class="fa-brands fa-spotify brand-icon spotify-icon"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    <h3>Audio Footprint</h3>
+                    <p>Musical identity projection via playlist and top artist tracking. Launch the session worker via
+                        the icon.</p>
+                </div>
+                <div class="path-container">
+                    <code class="path">/api/integrations/spotify/sync/</code>
+                </div>
+            </article>
+
+            <!-- API Creator -->
+            <article class="endpoint-card">
+                <div class="card-header">
+                    <span class="method">POST</span>
+                    <i class="fa-solid fa-wand-magic-sparkles brand-icon"></i>
+                </div>
+                <div class="card-body">
+                    <h3>Projection Engine</h3>
+                    <p>Custom logical mapping of raw normalized datasets into specialized endpoints for lightweight
+                        consumption.</p>
+                </div>
+                <div class="path-container">
+                    <code class="path">/api/custom/create/</code>
+                </div>
+            </article>
+
+            <!-- Dashboard -->
+            <article class="endpoint-card">
+                <div class="card-header">
+                    <span class="method">GET</span>
+                    <i class="fa-solid fa-chart-line brand-icon"></i>
+                </div>
+                <div class="card-body">
+                    <h3>System Controller</h3>
+                    <p>Comprehensive architectural health audits, user activity telemetry, and cross-platform sync
+                        status.</p>
+                </div>
+                <div class="path-container">
+                    <code class="path">/api/dashboard/overview/</code>
+                </div>
+            </article>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="analytics-section">
+            <div class="section-header">
+                <div class="badge"><span class="dot"></span> Insight Engine</div>
+                <h2>Personal Progress Analytics</h2>
+                <p class="subtitle">Deep dive into your digital activity trends and platform distributions processed via
+                    pandas.</p>
+                <button id="load-analytics-btn">
+                    <i class="fa-solid fa-bolt"></i> Run Analytics Engine
+                </button>
+            </div>
+
+            <div class="analytics-grid" id="analytics-display">
+                <div class="graph-card">
+                    <h3><i class="fa-solid fa-code-branch icon-primary"></i> Language Distribution</h3>
+                    <div class="chart-container">
+                        <img src="" alt="Language Chart" id="img-languages">
+                    </div>
+                </div>
+                <div class="graph-card">
+                    <h3><i class="fa-solid fa-chart-line icon-secondary"></i> Activity Trends</h3>
+                    <div class="chart-container">
+                        <img src="" alt="Trends Chart" id="img-trends">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('load-analytics-btn').addEventListener('click', async function () {
+            const btn = this;
+            const display = document.getElementById('analytics-display');
+            const imgLang = document.getElementById('img-languages');
+            const imgTrends = document.getElementById('img-trends');
+
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                // In a real environment, you'd fetch with Authorization headers
+                // For this interactive dashboard, we'll try a public fetch or fallback
+                const response = await fetch('/api/dashboard/analytics/');
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    imgLang.src = result.data.charts.languages_pie + '?t=' + new Date().getTime();
+                    imgTrends.src = result.data.charts.trends_bar + '?t=' + new Date().getTime();
+                    display.style.display = 'grid';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Analytics Ready';
+
+                    // Simple scroll into view
+                    display.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Error: ' + result.message);
+                    btn.innerHTML = 'Retry Analytics';
+                }
+            } catch (err) {
+                console.error(err);
+                btn.innerHTML = 'Error Running Engine';
+                alert('Authentication required or server error. Ensure you are logged in.');
+            }
+        });
+    </script>
+
+    <footer>
+        <div class="footer-content">
+            <div class="status-pill">
+                <div class="ping-container"></div>
+                API Cluster Operational
+            </div>
+            <div class="footer-links">
+                <span>Clean Architecture v6</span>
+                <span>Production Environment</span>
+                <span>&copy; 2026 Personal API Hub</span>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>
