@@ -232,6 +232,8 @@
             gap: 2rem;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            color: inherit;
             box-shadow:
                 0 0 0 1px rgba(255, 255, 255, 0.02) inset,
                 0 10px 30px -10px rgba(0, 0, 0, 0.5);
@@ -341,9 +343,44 @@
         }
 
         .endpoint-card:hover .path {
-            opacity: 1;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* --- Launch Button --- */
+        .launch-action {
+            position: absolute;
+            bottom: 2rem;
+            left: 3rem;
+            right: 3rem;
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s var(--transition);
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
+
+        .endpoint-card:hover .launch-action {
             transform: translateY(0);
-            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .endpoint-card:hover .card-body p {
+            opacity: 0.7;
+            transform: translateY(-10px);
+        }
+
+        .card-body p {
+            transition: all 0.4s var(--transition);
         }
 
         .spotify-link {
@@ -633,99 +670,99 @@
 
         <section class="endpoints">
             <!-- Auth -->
-            <article class="endpoint-card">
+            <a href="/api/auth/register/" class="endpoint-card">
                 <div class="card-header">
                     <span class="method">POST</span>
-                    <a href="/api/auth/register/" style="color: inherit; text-decoration: none;"
-                        title="Go to Registration">
-                        <i class="fa-solid fa-shield-halved brand-icon"></i>
-                    </a>
+                    <i class="fa-solid fa-shield-halved brand-icon"></i>
                 </div>
                 <div class="card-body">
                     <h3>Authentication</h3>
                     <p>Production-grade user management with secure credential hashing and multi-environment JWT
                         support.</p>
                 </div>
-                <div class="path-container">
+                <div class="launch-action">
+                    <i class="fa-solid fa-rocket"></i> Launch Registration
+                </div>
+                <div class="path-container" style="display: none;">
                     <code class="path">/api/auth/register/</code>
                 </div>
-            </article>
+            </a>
 
             <!-- GitHub -->
-            <article class="endpoint-card">
+            <a href="https://github.com" target="_blank" rel="noopener" class="endpoint-card">
                 <div class="card-header">
                     <span class="method">POST</span>
-                    <a href="https://github.com" target="_blank" rel="noopener"
-                        style="color: inherit; text-decoration: none;" title="Launch GitHub">
-                        <i class="fa-brands fa-github brand-icon"></i>
-                    </a>
+                    <i class="fa-brands fa-github brand-icon"></i>
                 </div>
                 <div class="card-body">
                     <h3>Code Insight Sync</h3>
                     <p>Automated repository analysis, language distribution, and star-count normalization for dev
                         profiles.</p>
                 </div>
-                <div class="path-container">
+                <div class="launch-action">
+                    <i class="fa-brands fa-github"></i> Open GitHub
+                </div>
+                <div class="path-container" style="display: none;">
                     <code class="path">/api/integrations/github/sync/</code>
                 </div>
-            </article>
+            </a>
 
             <!-- Spotify -->
-            <article class="endpoint-card">
+            <a href="https://open.spotify.com" target="_blank" rel="noopener" class="endpoint-card">
                 <div class="card-header">
                     <span class="method">POST</span>
-                    <a href="https://open.spotify.com" target="_blank" rel="noopener" class="spotify-link"
-                        title="Launch Spotify Web Player">
-                        <i class="fa-brands fa-spotify brand-icon spotify-icon"></i>
-                    </a>
+                    <i class="fa-brands fa-spotify brand-icon spotify-icon"></i>
                 </div>
                 <div class="card-body">
                     <h3>Audio Footprint</h3>
                     <p>Musical identity projection via playlist and top artist tracking. Launch the session worker via
                         the icon.</p>
                 </div>
-                <div class="path-container">
+                <div class="launch-action">
+                    <i class="fa-brands fa-spotify"></i> Open Spotify
+                </div>
+                <div class="path-container" style="display: none;">
                     <code class="path">/api/integrations/spotify/sync/</code>
                 </div>
-            </article>
+            </a>
 
             <!-- API Creator -->
-            <article class="endpoint-card">
+            <a href="/dashboard/api-builder/" class="endpoint-card">
                 <div class="card-header">
                     <span class="method">POST</span>
-                    <a href="/dashboard/api-builder/" style="color: inherit; text-decoration: none;"
-                        title="Go to API Builder">
-                        <i class="fa-solid fa-wand-magic-sparkles brand-icon"></i>
-                    </a>
+                    <i class="fa-solid fa-wand-magic-sparkles brand-icon"></i>
                 </div>
                 <div class="card-body">
                     <h3>Projection Engine</h3>
                     <p>Custom logical mapping of raw normalized datasets into specialized endpoints for lightweight
                         consumption.</p>
                 </div>
-                <div class="path-container">
+                <div class="launch-action">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Launch API Builder
+                </div>
+                <div class="path-container" style="display: none;">
                     <code class="path">/api/custom/create/</code>
                 </div>
-            </article>
+            </a>
 
             <!-- Dashboard -->
-            <article class="endpoint-card">
+            <a href="/dashboard/overview/" class="endpoint-card">
                 <div class="card-header">
                     <span class="method">GET</span>
-                    <a href="/dashboard/overview/" style="color: inherit; text-decoration: none;"
-                        title="Go to Dashboard">
-                        <i class="fa-solid fa-chart-line brand-icon"></i>
-                    </a>
+                    <i class="fa-solid fa-chart-line brand-icon"></i>
                 </div>
                 <div class="card-body">
                     <h3>System Controller</h3>
                     <p>Comprehensive architectural health audits, user activity telemetry, and cross-platform sync
                         status.</p>
                 </div>
-                <div class="path-container">
+                <div class="launch-action">
+                    <i class="fa-solid fa-chart-line"></i> Open Dashboard
+                </div>
+                <div class="path-container" style="display: none;">
                     <code class="path">/api/dashboard/overview/</code>
                 </div>
-            </article>
+            </a>
         </section>
 
         <!-- Analytics Section -->

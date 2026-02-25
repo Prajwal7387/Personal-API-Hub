@@ -32,14 +32,25 @@
                 style="font-size: 0.8rem; color: var(--primary);">/api/integrations/github/sync/</code>
         </div>
 
-        {% if 'github' in connected_providers %}
-        <button class="sync-btn btn-sync" data-source="github" style="margin-top: auto;">
-            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
-        </button>
-        {% else %}
-        <button class="sync-btn btn-sync" data-source="github" style="margin-top: auto;" disabled>
-            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
-        </button>
+        <div style="display: flex; gap: 1rem; margin-top: auto;">
+            {% if 'github' in connected_providers %}
+            <button class="sync-btn btn-sync" data-source="github" style="flex: 1;">
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+            </button>
+            {% else %}
+            <button class="sync-btn btn-sync" data-source="github" style="flex: 1;" disabled>
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+            </button>
+            {% endif %}
+            <a href="https://github.com" target="_blank" rel="noopener" class="btn-sync"
+                style="flex: 1; text-decoration: none; display: flex; align-items: center; justify-content: center; background: var(--zinc-900); border: 1px solid var(--border); color: var(--zinc-300);">
+                <i class="fa-brands fa-github"></i> View
+            </a>
+        </div>
+        {% if 'github' not in connected_providers %}
+        <p style="font-size: 0.75rem; color: var(--zinc-500); text-align: center; margin-top: 0.5rem;">
+            * Connect your account on the platform first
+        </p>
         {% endif %}
     </div>
 
@@ -65,14 +76,25 @@
                 style="font-size: 0.8rem; color: var(--primary);">/api/integrations/spotify/sync/</code>
         </div>
 
-        {% if 'spotify' in connected_providers %}
-        <button class="sync-btn btn-sync" data-source="spotify" style="margin-top: auto;">
-            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
-        </button>
-        {% else %}
-        <button class="sync-btn btn-sync" data-source="spotify" style="margin-top: auto;" disabled>
-            <i class="fa-solid fa-arrows-rotate"></i> Sync Data
-        </button>
+        <div style="display: flex; gap: 1rem; margin-top: auto;">
+            {% if 'spotify' in connected_providers %}
+            <button class="sync-btn btn-sync" data-source="spotify" style="flex: 1;">
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+            </button>
+            {% else %}
+            <button class="sync-btn btn-sync" data-source="spotify" style="flex: 1;" disabled>
+                <i class="fa-solid fa-arrows-rotate"></i> Sync Data
+            </button>
+            {% endif %}
+            <a href="https://open.spotify.com" target="_blank" rel="noopener" class="btn-sync"
+                style="flex: 1; text-decoration: none; display: flex; align-items: center; justify-content: center; background: var(--zinc-900); border: 1px solid var(--border); color: var(--zinc-300);">
+                <i class="fa-brands fa-spotify"></i> View
+            </a>
+        </div>
+        {% if 'spotify' not in connected_providers %}
+        <p style="font-size: 0.75rem; color: var(--zinc-500); text-align: center; margin-top: 0.5rem;">
+            * Connect your account on the platform first
+        </p>
         {% endif %}
     </div>
 </div>
