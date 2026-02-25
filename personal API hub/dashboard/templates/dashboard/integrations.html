@@ -13,13 +13,15 @@
     <!-- GitHub Integration -->
     <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <div class="flex-between">
-            <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="https://github.com" target="_blank" rel="noopener"
+                style="display: flex; align-items: center; gap: 1rem; color: inherit; text-decoration: none;"
+                title="Go to GitHub">
                 <i class="fa-brands fa-github" style="font-size: 2rem; color: var(--zinc-50);"></i>
                 <div>
                     <h3 style="font-size: 1.25rem;">GitHub</h3>
                     <p class="text-muted" style="font-size: 0.85rem;">Repo analysis & language stats</p>
                 </div>
-            </div>
+            </a>
             <span class="{% if 'github' in connected_providers %}status-active{% else %}status-inactive{% endif %}">
                 {% if 'github' in connected_providers %}CONNECTED{% else %}DISCONNECTED{% endif %}
             </span>
@@ -44,13 +46,15 @@
     <!-- Spotify Integration -->
     <div class="card" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <div class="flex-between">
-            <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="https://open.spotify.com" target="_blank" rel="noopener"
+                style="display: flex; align-items: center; gap: 1rem; color: inherit; text-decoration: none;"
+                title="Go to Spotify">
                 <i class="fa-brands fa-spotify" style="font-size: 2rem; color: #1DB954;"></i>
                 <div>
                     <h3 style="font-size: 1.25rem;">Spotify</h3>
                     <p class="text-muted" style="font-size: 0.85rem;">Audio footprint & playlists</p>
                 </div>
-            </div>
+            </a>
             <span class="{% if 'spotify' in connected_providers %}status-active{% else %}status-inactive{% endif %}">
                 {% if 'spotify' in connected_providers %}CONNECTED{% else %}DISCONNECTED{% endif %}
             </span>
