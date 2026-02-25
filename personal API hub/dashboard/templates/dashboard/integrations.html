@@ -102,6 +102,17 @@
 
 {% block extra_js %}
 <script>
+    // Universal Integration Card Interactivity Fail-safe
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', function (e) {
+            // Find if there's a primary link to launch
+            const launchLink = this.querySelector('a[title^="Go to"], .btn-sync[href]');
+            if (launchLink && !e.target.closest('button') && !e.target.closest('a')) {
+                window.open(launchLink.href, '_blank');
+            }
+        });
+    });
+
     document.querySelectorAll('.sync-btn').forEach(btn => {
         btn.addEventListener('click', async function () {
             const source = this.dataset.source;
